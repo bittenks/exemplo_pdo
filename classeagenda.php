@@ -36,7 +36,7 @@ class Agenda{
             return false;
         }
         else{
-            $cmd = $this->pdo->prepare("INSERT INTO agenda (`id`, `nome`, `email`,`telefone` ) VALUES ('',:nm,:em,:tl)");
+            $cmd = $this->pdo->prepare("INSERT INTO agenda (nome, email,telefone) VALUES (:nm,:em,:tl)");
             $cmd->bindValue(":nm", $nome);
             $cmd->bindValue(":em", $email);
             $cmd->bindValue(":tl", $telefone);
@@ -54,7 +54,7 @@ class Agenda{
 
     public function alterarDados($id, $nome, $telefone, $email)
     {
-        $cmd = $this->pdo->prepare("UPDATE agenda SET  'nome' = :nm, 'telefone' = :tl, `email` = :em WHERE `agenda`.'id' = :id;");
+        $cmd = $this->pdo->prepare("UPDATE agenda SET  nome = :nm, telefone = :tl, email = :em WHERE id= :id");
         $cmd->bindValue(":id", $id);
         $cmd->bindValue(":nm", $nome);
         $cmd->bindValue(":em", $email);

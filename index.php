@@ -10,78 +10,74 @@
 </head>
 
 <body>
-  
+
   <?php
   require_once 'classeagenda.php';
   $agenda = new Agenda("localhost", "root", "", "aula");
   ?>
   <section id='esquerda'>
     <?php
-    if(isset($_POST['nome']))
-    {
-      if(isset($_GET['id_alterar'])&&!empty($id_alterar))
-      { 
-      $id_up = addslashes($_GET['id_alterar']);  
-      $nome= addslashes($_POST['nome']);
-      $telefone= addslashes($_POST['telefone']);
-      $email= addslashes($_POST['email']);
-      if(!empty($nome)&&!empty($telefone)&&!empty($email))
-      {
-        $agenda->alterarDados($id_up, $nome, $telefone, $email);
-        header('location:index.php');
-      }
-      else 
-      {
-        ?>
-       <div class='aviso'><img src='aviso.png'style="width: 50px"><h4>preencha todos os campos</h4></div>
-       <?php
-      }
-      
+    if (isset($_GET['id_alterar'])) {
+      $id_alterar = addslashes($_GET['id_alterar']);
+      $res = $agenda->buscarDadosId($id_alterar);
     }
-    else 
-    {
-        $nome= addslashes($_POST['nome']);
-        $telefone= addslashes($_POST['telefone']);
-        $email= addslashes($_POST['email']);
-        if(!empty($nome)&&!empty($telefone)&&!empty($email))
+
+    if (isset($_POST['nome'])) {
+      if (isset($_GET['id_alterar']) && !empty($id_alterar)) {
+        $id_up = addslashes($_GET['id_alterar']);
+        $nome = addslashes($_POST['nome']);
+        $telefone = addslashes($_POST['telefone']);
+        $email = addslashes($_POST['email']);
+        if (!empty($nome) && !empty($telefone) && !empty($email)) {
+          $agenda->alterarDados($id_up, $nome, $telefone, $email);
+          header('location:index.php');
+        } 
+        else 
         {
-          if(!$agenda->inserirDados($nome,$telefone,$email))
-          {
-          echo "E-mail ou telefone Ja cadastrado.";
-          }
+        ?>
+          <div class='aviso'><img src='aviso.png' style="width: 50px">
+            <h4>preencha todos os campos</h4>
+          </div>
+        <?php
         }
-        else
+      } else {
+        $nome = addslashes($_POST['nome']);
+        $telefone = addslashes($_POST['telefone']);
+        $email = addslashes($_POST['email']);
+        if (!empty($nome) && !empty($telefone) && !empty($email)) {
+          if (!$agenda->inserirDados($nome,$email,$telefone)) {
+            echo "E-mail ou telefone Ja cadastrado.";
+          }
+        } 
+        else 
         {
-          ?>
+        ?>
           <div class='aviso'>
             <img src='aviso.png' style="width: 50px">
-            <h4>preencha todos os campos</h4></div>
-          <?php
+            <h4>preencha todos os campos</h4>
+          </div>
+        <?php
         }
+      }
     }
-  }
     ?>
     <form method="POST">
       <h2>Cadastrar Pessoa</h2>
       <label for="nome">Nome</label>
-      <input type="text" name='nome' id='nome'
-      value="<?PHP if(isset($res)){echo $res['nome'];}?>">
+      <input type="text" name='nome' id='nome' 
+      value="<?PHP if (isset($res)){
+      echo $res['nome'];} ?>">
       <label for="telefone">Telefone</label>
       <input type="text" name='telefone' id='telefone'
-      value="<?PHP if(isset($res)){echo $res['telefone'];}?>">
+      value="<?PHP if (isset($res)) {
+      echo $res['telefone'];} ?>">
       <label for="email">Email</label>
-      <input type="email" name='email' id='email'
-       value="<?PHP if(isset($res)){echo $res['email'];}?>">
+      <input type="email" name='email' id='email' 
+      value="<?PHP if (isset($res)) {
+      echo $res['email'];} ?>">
       <input type="submit" value='Cadastrar'>
     </form>
   </section>
-  <?php
-  if(isset($_GET['id_alterar']))
-  {
-    $id_alterar = addslashes($_GET['id_alterar']);
-    $res = $agenda->buscarDadosId($id_alterar);
-  }
-  ?>
   <section id="direita">
     <table>
       <tr id='titulo'>
@@ -99,20 +95,18 @@
               echo "<td>" . $valor . "</td>";
             }
           }
-          echo "<td><a href=index.php?id_alterar=".$dados[$i]['id'].">Alterar</a> <a href=index.php?id_apagar=".$dados[$i]['id'].">Excluir</a></td>";
+          echo "<td><a href=index.php?id_alterar=" . $dados[$i]['id'] . ">Alterar</a> <a href=index.php?id_apagar=" . $dados[$i]['id'] . ">Excluir</a></td>";
           echo "</tr>";
         }
-        
       } else {
         echo 'O banco de dados esta vazio';
       }
-      if(isset($_GET['id_apagar']))
-        {
+      if (isset($_GET['id_apagar'])) {
         $id_apagar = addslashes($_GET['id_apagar']);
         $agenda->apagarDados($id_apagar);
         header('location:index.php');
-        }
-      
+      }
+
       ?>
       <tr>
         <td></td>
@@ -123,4 +117,5 @@
     </table>
   </section>
 </body>
+
 </html>
